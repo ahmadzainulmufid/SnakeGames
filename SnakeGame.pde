@@ -1,4 +1,4 @@
-int grid = 20; //How big each grid square will be
+int grid = 20; // How big each grid square will be
 PVector food;
 int speed = 10;
 boolean dead = true;

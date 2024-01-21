@@ -15,8 +15,8 @@ class Snake {
 
   void update() {
     hist.add(pos.copy());
-    pos.x += vel.x*grid;
-    pos.y += vel.y*grid;
+    pos.x += vel.x * grid;
+    pos.y += vel.y * grid;
     moveX = int(vel.x);
     moveY = int(vel.y);
 
@@ -36,12 +36,13 @@ class Snake {
   }
 
   void eat() {
-    if (pos.x == food.x && pos.y == food.y) {
-      len++;
-      if (speed > 5) speed--;
-      newFood();
-    }
+  if (pos.x == food.x && pos.y == food.y) {
+    len++;
+    if (speed > 5) speed--;
+    newFood();
   }
+}
+
 
   void show() {
     noStroke();
@@ -53,18 +54,16 @@ class Snake {
   }
 }
 
-void keyPressed() {
-  if (keyCode == LEFT && snake.moveX != 1) {
-    snake.vel.x = -1;
-    snake.vel.y = 0;
-  } else if (keyCode == RIGHT && snake.moveX != -1) {
-    snake.vel.x = 1;
-    snake.vel.y = 0;
-  } else if (keyCode == UP && snake.moveY != 1) {
-    snake.vel.y = -1;
-    snake.vel.x = 0;
-  } else if (keyCode == DOWN && snake.moveY != -1) {
-    snake.vel.y = 1;
-    snake.vel.x = 0;
+void mouseMoved() {
+  float dx = mouseX - snake.pos.x;
+  float dy = mouseY - snake.pos.y;
+
+  // Menentukan apakah perubahan x atau y yang lebih besar
+  if (abs(dx) > abs(dy)) {
+    // Bergerak kiri atau kanan
+    snake.vel.set((dx > 0) ? 1 : -1, 0, 0);
+  } else {
+    // Bergerak atas atau bawah
+    snake.vel.set(0, (dy > 0) ? 1 : -1, 0);
   }
 }
