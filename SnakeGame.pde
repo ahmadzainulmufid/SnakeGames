@@ -7,10 +7,23 @@ Snake snake;
 
 float angle = 0.0;
 float angleSpeed = 0.05;
-float foodSizeAmplitude = 5; // Adjust the amplitude to control the size change
+float foodSizeAmplitude = 15; // Adjust the amplitude to control the size change
+
+PImage backgroundImage; // Declare PImage variable for background image
+PImage fruitImage; // Declare PImage variable for fruit image
+float fruitScale = 12; // Adjust the scale factor for the fruit
 
 void setup() {
   size(500, 500);
+
+  // Load background image
+  backgroundImage = loadImage("background.jpg");
+  backgroundImage.resize(width, height); // Resize the image to fit the canvas
+
+  // Load fruit image
+  fruitImage = loadImage("fruit.png");
+  fruitImage.resize((int) (grid * fruitScale), (int) (grid * fruitScale)); // Resize the fruit image with scale factor
+
   snake = new Snake();
   food = new PVector();
   newFood();
@@ -18,29 +31,29 @@ void setup() {
 }
 
 void draw() {
-  background(255);
-  fill(255);
-  if (!dead) {
+  // Display background image
+  image(backgroundImage, 0, 0);
 
+  if (!dead) {
     if (frameCount % speed == 0) {
       snake.update();
     }
     snake.show();
     snake.eat();
 
-    // Add animation to the food
+    // Add animation to the food (fruit)
     angle += angleSpeed;
     float foodSize = grid + foodSizeAmplitude * sin(angle); // Change the size of the food
-    ellipse(food.x + grid / 2, food.y + grid / 2, foodSize, foodSize);
+    image(fruitImage, food.x, food.y, foodSize, foodSize); // Display the fruit image
 
     textAlign(LEFT);
-    textSize(15);
-    fill(0);
-    text("Score: " + snake.len, 10, 20);
+    fill(255);
+    textSize(25);
+    text("Score: " + snake.len, 14, 32);
   } else {
     textSize(25);
     textAlign(CENTER, CENTER);
-    fill(0);
+    fill(255);
     text("Snake Game\nClick to start" + "\nHighscore: " + highscore, width/2, height/2);
   }
 }
