@@ -13,31 +13,47 @@ class Snake {
     len = 0;
   }
 
-  void update() {
-    hist.add(pos.copy());
+void update() {
+  hist.add(pos.copy());
 
-    float easing = 0.1;
-    pos.x += vel.x * grid;
-    pos.y += vel.y * grid;
-    moveX = int(vel.x);
-    moveY = int(vel.y);
+  float newX = pos.x + vel.x * grid;
+  float newY = pos.y + vel.y * grid;
 
-    // Apply wrapping to the snake's position
-    pos.x = (pos.x + width) % width;
-    pos.y = (pos.y + height) % height;
+  // Tambahkan batasan tembok
+  if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+    pos.x = newX;
+    pos.y = newY;
+  } else {
+    dead = true;
+    
+    // Play game over sound
+    gameOverSound.rewind();
+    gameOverSound.play();
+    
+    if (len > highscore) highscore = len;
+  }
 
-    if (hist.size() > len) {
-      hist.remove(0);
-    }
+  moveX = int(vel.x);
+  moveY = int(vel.y);
 
-    for (PVector p : hist) {
-      if (p.x == pos.x && p.y == pos.y) {
-        // Handle collision logic
-        dead = true;
-        if (len > highscore) highscore = len;
-      }
+  if (hist.size() > len) {
+    hist.remove(0);
+  }
+
+  for (PVector p : hist) {
+    if (p.x == pos.x && p.y == pos.y) {
+      // Handle collision logic
+      dead = true;
+      
+      // Play game over sound
+      gameOverSound.rewind();
+      gameOverSound.play();
+      
+      if (len > highscore) highscore = len;
     }
   }
+}
+
 
 
   void eat() {
@@ -45,6 +61,11 @@ class Snake {
     len++;
     if (speed > 5) speed--;
     newFood();
+  }
+    if (pos.x == bomb.x && pos.y == bomb.y) {
+    len--;
+    if (speed > 5) speed--;
+    newBomb();
   }
 }
 
