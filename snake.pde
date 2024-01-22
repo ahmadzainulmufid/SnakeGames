@@ -5,12 +5,14 @@ class Snake {
   int len;
   int moveX = 0;
   int moveY = 0;
+  int lives;
 
   Snake() {
     pos = new PVector(0, 0);
     vel = new PVector();
     hist = new ArrayList<PVector>();
     len = 0;
+    lives = 3;
   }
 
 void update() {
@@ -68,6 +70,8 @@ void eat() {
   }
   if (pos.x == bomb.x && pos.y == bomb.y) {
     len--;
+    lives--;
+    if (lives < 1) dead=true;
     if (speed > 5) speed--;
     newBomb();
   }
@@ -79,7 +83,7 @@ void show() {
   noStroke();
 
   // Animate the head of the snake with a colorful gradient
-  float headSize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
+  float headSize = map(frameCount % 30, 0, 29, grid, grid * 1.2);
   fill(255, 150, 150);
 
   // Draw elliptical/bullet-shaped head
@@ -118,7 +122,7 @@ void show() {
 
   // Animate the body of the snake with rounded corners
   for (PVector p : hist) {
-    float bodySize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
+    float bodySize = map(frameCount % 30, 0, 29, grid , grid * 1.2);
     fill(150, 255, 150);
 
     // Draw elliptical/bullet-shaped body
