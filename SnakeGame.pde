@@ -49,7 +49,7 @@ void setup() {
   bomb = new PVector();
   newFood();
   newBomb();
-  //frameRate(8);
+  //frameRate(100);
   
     minim = new Minim(this);
 
@@ -75,18 +75,22 @@ void draw() {
 
     // Add animation to the food (fruit)
     angle += angleSpeed;
-    float foodSize = grid + foodSizeAmplitude * sin(angle); // Change the size of the food
+    float foodSize = grid + (foodSizeAmplitude * sin(angle))/5; // Change the size of the food
     image(fruitImage, food.x, food.y, foodSize, foodSize); // Display the fruit image
 
     // Add animation to the food (fruit)
     angle += angleSpeed;
-    float bombSize = grid + bombSizeAmplitude * sin(angle); // Change the size of the food
+    float bombSize = grid + (bombSizeAmplitude * sin(angle))/5; // Change the size of the food
     image(bombImage, bomb.x, bomb.y, bombSize, bombSize); // Display the fruit image
     
     textAlign(LEFT);
     fill(255);
     textSize(25);
     text("Score: " + snake.len, 14, 32);
+    textAlign(LEFT);
+    fill(255);
+    textSize(25);
+    text("Lives: " + snake.lives, 14, 480);
   } else {
     textSize(25);
     textAlign(CENTER, CENTER);
