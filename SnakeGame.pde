@@ -28,6 +28,10 @@ Minim minim;
 AudioPlayer gameSound;
 AudioPlayer gameOverSound;
 
+Minim minim;
+AudioPlayer gameSound;
+AudioPlayer gameOverSound;
+
 void setup() {
   size(500, 500);
 
