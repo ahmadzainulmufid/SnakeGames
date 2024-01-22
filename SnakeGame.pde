@@ -1,3 +1,10 @@
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+import ddf.minim.signals.*;
+import ddf.minim.spi.*;
+import ddf.minim.ugens.*;
+
 int grid = 20; // How big each grid square will be
 PVector food;
 int speed = 10;
@@ -12,6 +19,10 @@ float foodSizeAmplitude = 15; // Adjust the amplitude to control the size change
 PImage backgroundImage; // Declare PImage variable for background image
 PImage fruitImage; // Declare PImage variable for fruit image
 float fruitScale = 12; // Adjust the scale factor for the fruit
+
+Minim minim;
+AudioPlayer gameSound;
+AudioPlayer gameOverSound;
 
 void setup() {
   size(500, 500);
@@ -28,6 +39,14 @@ void setup() {
   food = new PVector();
   newFood();
   //frameRate(8);
+  
+    minim = new Minim(this);
+
+  // Load game sound
+  gameSound = minim.loadFile("Kevin MacLeod - 8bit Dungeon Boss.mp3");
+
+  // Load game over sound
+  gameOverSound = minim.loadFile("videogame-death-sound-43894.mp3");
 }
 
 void draw() {
@@ -71,5 +90,9 @@ void mousePressed() {
     newFood();
     speed = 10;
     dead = false;
+    
+        // Play game sound
+    gameSound.rewind();
+    gameSound.play();
   }
 }
