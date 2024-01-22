@@ -27,10 +27,7 @@ float bombScale = 12;
 Minim minim;
 AudioPlayer gameSound;
 AudioPlayer gameOverSound;
-
-Minim minim;
-AudioPlayer gameSound;
-AudioPlayer gameOverSound;
+AudioPlayer foodSound;
 
 void setup() {
   size(500, 500);
@@ -61,6 +58,8 @@ void setup() {
 
   // Load game over sound
   gameOverSound = minim.loadFile("videogame-death-sound-43894.mp3");
+  // Load food sound
+  foodSound = minim.loadFile("570636__bsp7176__food.mp3");
 }
 
 void draw() {
