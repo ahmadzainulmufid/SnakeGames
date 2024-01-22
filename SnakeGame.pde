@@ -5,6 +5,10 @@ boolean dead = true;
 int highscore = 0;
 Snake snake;
 
+float angle = 0.0;
+float angleSpeed = 0.05;
+float foodSizeAmplitude = 5; // Adjust the amplitude to control the size change
+
 void setup() {
   size(500, 500);
   snake = new Snake();
@@ -14,7 +18,7 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(255);
   fill(255);
   if (!dead) {
 
@@ -23,15 +27,20 @@ void draw() {
     }
     snake.show();
     snake.eat();
-    fill(255, 0, 0);
-    rect(food.x, food.y, grid, grid);
+
+    // Add animation to the food
+    angle += angleSpeed;
+    float foodSize = grid + foodSizeAmplitude * sin(angle); // Change the size of the food
+    ellipse(food.x + grid / 2, food.y + grid / 2, foodSize, foodSize);
+
     textAlign(LEFT);
     textSize(15);
-    fill(255);
+    fill(0);
     text("Score: " + snake.len, 10, 20);
   } else {
     textSize(25);
     textAlign(CENTER, CENTER);
+    fill(0);
     text("Snake Game\nClick to start" + "\nHighscore: " + highscore, width/2, height/2);
   }
 }
