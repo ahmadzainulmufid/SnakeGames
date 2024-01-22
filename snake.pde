@@ -62,6 +62,11 @@ void update() {
     if (speed > 5) speed--;
     newFood();
   }
+    if (pos.x == bomb.x && pos.y == bomb.y) {
+    len--;
+    if (speed > 5) speed--;
+    newBomb();
+  }
 }
 
 
