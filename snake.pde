@@ -34,6 +34,11 @@ class Snake {
       if (p.x == pos.x && p.y == pos.y) {
         // Handle collision logic
         dead = true;
+        
+              // Play game over sound
+      gameOverSound.rewind();
+      gameOverSound.play();
+      
         if (len > highscore) highscore = len;
       }
     }
