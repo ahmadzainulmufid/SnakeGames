@@ -56,13 +56,17 @@ void update() {
 
 
 
-  void eat() {
+void eat() {
   if (pos.x == food.x && pos.y == food.y) {
     len++;
     if (speed > 5) speed--;
     newFood();
+
+    // Play food sound
+    foodSound.rewind();
+    foodSound.play();
   }
-    if (pos.x == bomb.x && pos.y == bomb.y) {
+  if (pos.x == bomb.x && pos.y == bomb.y) {
     len--;
     if (speed > 5) speed--;
     newBomb();
@@ -70,21 +74,57 @@ void update() {
 }
 
 
+
 void show() {
-    noStroke();
+  noStroke();
 
-    // Animate the head of the snake with a colorful gradient
-    float headSize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
-    fill(255, 150, 150);
-    rect(pos.x, pos.y, headSize, headSize, 10);
+  // Animate the head of the snake with a colorful gradient
+  float headSize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
+  fill(255, 150, 150);
 
-    // Animate the body of the snake with rounded corners
-    for (PVector p : hist) {
-      float bodySize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
-      fill(150, 255, 150);
-      rect(p.x, p.y, bodySize, bodySize, 10);
-    }
+  // Draw elliptical/bullet-shaped head
+  ellipse(pos.x + headSize / 2, pos.y + headSize / 2, headSize, headSize);
+
+  // Draw eyes on the head
+  float eyeSize = headSize * 0.2; // Adjust eye size
+  float eyeOffset = headSize * 0.25; // Adjust eye offset
+
+  fill(0); // Eye color
+  ellipse(pos.x + headSize * 0.4, pos.y + headSize * 0.4, eyeSize, eyeSize);
+  ellipse(pos.x + headSize * 0.8, pos.y + headSize * 0.4, eyeSize, eyeSize);
+
+  // Draw pupils inside the eyes
+  fill(255); // Pupil color (white)
+  ellipse(pos.x + headSize * 0.4, pos.y + headSize * 0.4, eyeSize * 0.7, eyeSize * 0.7);
+  ellipse(pos.x + headSize * 0.8, pos.y + headSize * 0.4, eyeSize * 0.7, eyeSize * 0.7);
+
+  // Draw mouth
+  fill(255); // Mouth color (white)
+
+  // Adjust mouth position and size based on the snake's direction
+  float mouthSize = headSize * 0.4;
+  float mouthX = pos.x + headSize * 0.5;
+  float mouthY = pos.y + headSize * 0.7;
+
+  if (vel.x > 0) {
+    arc(mouthX, mouthY, mouthSize, mouthSize, 0, PI / 2);
+  } else if (vel.x < 0) {
+    arc(mouthX, mouthY, mouthSize, mouthSize, PI / 2, PI);
+  } else if (vel.y > 0) {
+    arc(mouthX, mouthY, mouthSize, mouthSize, PI, TWO_PI);
+  } else if (vel.y < 0) {
+    arc(mouthX, mouthY, mouthSize, mouthSize, 0, PI);
   }
+
+  // Animate the body of the snake with rounded corners
+  for (PVector p : hist) {
+    float bodySize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
+    fill(150, 255, 150);
+
+    // Draw elliptical/bullet-shaped body
+    ellipse(p.x + bodySize / 2, p.y + bodySize / 2, bodySize, bodySize);
+  }
+}
 }
 
 void mouseMoved() {
