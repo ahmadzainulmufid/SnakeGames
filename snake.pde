@@ -8,7 +8,7 @@ class Snake {
   int lives;
 
   Snake() {
-    pos = new PVector(0, 0);
+    pos = new PVector(20, 20);
     vel = new PVector();
     hist = new ArrayList<PVector>();
     len = 0;
@@ -21,17 +21,17 @@ void update() {
   float newX = pos.x + vel.x * grid;
   float newY = pos.y + vel.y * grid;
 
-  // Tambahkan batasan tembok
-  if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+  // Check collision with the border
+  if (newX >= 20 && newX < width && newY >= 10 && newY < height - 20) {
     pos.x = newX;
     pos.y = newY;
   } else {
     dead = true;
-    
+
     // Play game over sound
     gameOverSound.rewind();
     gameOverSound.play();
-    
+
     if (len > highscore) highscore = len;
   }
 
@@ -44,13 +44,13 @@ void update() {
 
   for (PVector p : hist) {
     if (p.x == pos.x && p.y == pos.y) {
-      // Handle collision logic
+      // Handle collision with itself
       dead = true;
-      
+
       // Play game over sound
       gameOverSound.rewind();
       gameOverSound.play();
-      
+
       if (len > highscore) highscore = len;
     }
   }
@@ -59,7 +59,11 @@ void update() {
 
 
 void eat() {
-  if (pos.x == food.x && pos.y == food.y) {
+  float adjustedX = pos.x + 10;
+  float adjustedY = pos.y + 10;
+
+  // Check for food collision
+  if (adjustedX >= food.x && adjustedX < food.x + grid && adjustedY >= food.y && adjustedY < food.y + grid) {
     len++;
     if (speed > 5) speed--;
     newFood();
@@ -68,14 +72,17 @@ void eat() {
     foodSound.rewind();
     foodSound.play();
   }
-  if (pos.x == bomb.x && pos.y == bomb.y) {
+
+  // Check for bomb collision
+  if (adjustedX >= bomb.x && adjustedX < bomb.x + grid && adjustedY >= bomb.y && adjustedY < bomb.y + grid) {
     len--;
     lives--;
-    if (lives < 1) dead=true;
+    if (lives < 1) dead = true;
     if (speed > 5) speed--;
     newBomb();
   }
 }
+
 
 
 

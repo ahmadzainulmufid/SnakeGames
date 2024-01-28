@@ -14,7 +14,7 @@ Snake snake;
 PVector bomb;
 
 float angle = 0.0;
-float angleSpeed = 0.05;
+float angleSpeed = 0.02;
 float foodSizeAmplitude = 15; // Adjust the amplitude to control the size change
 float bombSizeAmplitude = 15;
 
@@ -65,7 +65,7 @@ void setup() {
 void draw() {
   // Display background image
   image(backgroundImage, 0, 0);
-
+  drawBorder();
   if (!dead) {
     if (frameCount % speed == 0) {
       snake.update();
@@ -99,16 +99,38 @@ void draw() {
   }
 }
 
+void drawBorder() {
+  // Set brick size and color
+  int brickSize = 20;
+  int brickColor = color(255, 0, 0); // Red color
+
+  // Draw horizontal bricks at the top and bottom
+  for (int x = 0; x < width; x += brickSize) {
+    fill(brickColor);
+    rect(x, 0, brickSize, brickSize);
+    rect(x, height - brickSize, brickSize, brickSize);
+  }
+
+  // Draw vertical bricks on the left and right sides
+  for (int y = 0; y < height; y += brickSize) {
+    fill(brickColor);
+    rect(0, y, brickSize, brickSize);
+    rect(width - brickSize, y, brickSize, brickSize);
+  }
+}
+
 void newFood() {
-  food.x = floor(random(width));
-  food.y = floor(random(height));
-  food.x = floor(food.x/grid) * grid;
-  food.y = floor(food.y/grid) * grid;
+  int borderSize = 20;
+  food.x = floor(random(borderSize, width - borderSize));
+  food.y = floor(random(borderSize, height - borderSize));
+  food.x = floor(food.x / grid) * grid;
+  food.y = floor(food.y / grid) * grid;
 }
 
 void newBomb() {
-  bomb.x = floor(random(width));
-  bomb.y = floor(random(height));
+  int borderSize = 20;
+  bomb.x = floor(random(borderSize, width - borderSize));
+  bomb.y = floor(random(borderSize, height - borderSize));
   bomb.x = floor(bomb.x/grid) * grid;
   bomb.y = floor(bomb.y/grid) * grid;
 }
