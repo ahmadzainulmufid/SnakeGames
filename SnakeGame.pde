@@ -136,6 +136,7 @@ void newBomb() {
   bomb.y = floor(bomb.y/grid) * grid;
 }
 
+
 void mousePressed() {
   if (dead) {
     snake = new Snake();
