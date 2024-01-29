@@ -5,26 +5,40 @@ class Snake {
   int len;
   int moveX = 0;
   int moveY = 0;
+  int lives;
+  boolean isTongueOut = false; // Menandakan apakah lidah sedang keluar
+  int tongueTimer = 0; // Timer untuk mengatur kecepatan lidah
 
   Snake() {
-    pos = new PVector(0, 0);
+    pos = new PVector(20, 20);
     vel = new PVector();
     hist = new ArrayList<PVector>();
     len = 0;
+    lives = 3;
   }
 
   void update() {
     hist.add(pos.copy());
 
-    float easing = 0.1;
-    pos.x += vel.x * grid;
-    pos.y += vel.y * grid;
+    float newX = pos.x + vel.x * grid;
+    float newY = pos.y + vel.y * grid;
+
+    // Check collision with the border
+    if (newX >= 20 && newX < width && newY >= 10 && newY < height - 20) {
+      pos.x = newX;
+      pos.y = newY;
+    } else {
+      dead = true;
+
+      // Play game over sound
+      gameOverSound.rewind();
+      gameOverSound.play();
+
+      if (len > highscore) highscore = len;
+    }
+
     moveX = int(vel.x);
     moveY = int(vel.y);
-
-    // Apply wrapping to the snake's position
-    pos.x = (pos.x + width) % width;
-    pos.y = (pos.y + height) % height;
 
     if (hist.size() > len) {
       hist.remove(0);
@@ -32,37 +46,105 @@ class Snake {
 
     for (PVector p : hist) {
       if (p.x == pos.x && p.y == pos.y) {
-        // Handle collision logic
+        // Handle collision with itself
         dead = true;
+
+        // Play game over sound
+        gameOverSound.rewind();
+        gameOverSound.play();
+
         if (len > highscore) highscore = len;
       }
     }
+
+    // Tambahkan logika untuk menjulurkan dan menyembunyikan lidah
+    tongueTimer++;
+    if (tongueTimer >= 5) { // Ubah angka ini untuk meningkatkan atau mengurangi kecepatan lidah
+      isTongueOut = !isTongueOut;
+      tongueTimer = 0;
+    }
   }
 
-
   void eat() {
-  if (pos.x == food.x && pos.y == food.y) {
-    len++;
-    if (speed > 5) speed--;
-    newFood();
+    float adjustedX = pos.x + 10;
+    float adjustedY = pos.y + 10;
+
+    // Check for food collision
+    if (adjustedX >= food.x && adjustedX < food.x + grid && adjustedY >= food.y && adjustedY < food.y + grid) {
+      len++;
+      if (speed > 5) speed--;
+      newFood();
+
+      // Play food sound
+      foodSound.rewind();
+      foodSound.play();
+    }
+
+    // Check for bomb collision
+    if (adjustedX >= bomb.x && adjustedX < bomb.x + grid && adjustedY >= bomb.y && adjustedY < bomb.y + grid) {
+      len--;
+      lives--;
+      if (lives < 1) dead = true;
+      if (speed > 5) speed--;
+      newBomb();
+    }
+  }
+
+ void show() {
+  noStroke();
+
+  // Animate the head of the snake with a menacing appearance
+  float headSize = map(frameCount % 35, 0, 34, grid, grid * 1.5); // Menambahkan faktor skala pada ukuran kepala ular
+  fill(196, 11, 11); // Warna merah gelap untuk tampilan menyeramkan
+
+  // Gambar kepala ular berbentuk elips/peluru
+  ellipse(pos.x + headSize / 2, pos.y + headSize / 2, headSize, headSize);
+
+  // Gambar mata menyeramkan pada kepala ular
+  float eyeSize = headSize * 0.2;
+  float eyeOffset = headSize * 0.25;
+  fill(255); // Warna putih untuk mata
+  ellipse(pos.x + headSize * 0.4, pos.y + headSize * 0.4, eyeSize, eyeSize);
+  ellipse(pos.x + headSize * 0.8, pos.y + headSize * 0.4, eyeSize, eyeSize);
+
+  // Gambar pupil di dalam mata menyeramkan
+  fill(0); // Warna hitam untuk pupil
+  ellipse(pos.x + headSize * 0.4, pos.y + headSize * 0.4, eyeSize * 0.7, eyeSize * 0.7);
+  ellipse(pos.x + headSize * 0.8, pos.y + headSize * 0.4, eyeSize * 0.7, eyeSize * 0.7);
+
+  // Gambar senyum jahat
+  fill(0); // Warna hitam untuk mulut
+  float mouthSize = headSize * 0.4;
+  float mouthX = pos.x + headSize * 0.5;
+  float mouthY = pos.y + headSize * 0.7;
+  arc(mouthX, mouthY, mouthSize, mouthSize, PI / 8, 7 * PI / 8);
+
+  // Animasikan tubuh ular dengan sudut melengkung
+  for (PVector p : hist) {
+    float bodySize = map(frameCount % 35, 0, 34, grid, grid * 1.5); // Menambahkan faktor skala pada ukuran tubuh ular
+    fill(255, 92, 31);
+
+    // Gambar tubuh ular berbentuk elips/peluru
+    ellipse(p.x + bodySize / 2, p.y + bodySize / 2, bodySize, bodySize);
+  }
+  // Tambahkan logika untuk menampilkan lidah
+  if (isTongueOut) {
+    drawTongue(headSize);
   }
 }
 
 
-void show() {
-    noStroke();
-
-    // Animate the head of the snake with a colorful gradient
-    float headSize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
-    fill(255, 150, 150);
-    rect(pos.x, pos.y, headSize, headSize, 10);
-
-    // Animate the body of the snake with rounded corners
-    for (PVector p : hist) {
-      float bodySize = map(frameCount % 30, 0, 29, grid, grid * 1.5);
-      fill(150, 255, 150);
-      rect(p.x, p.y, bodySize, bodySize, 10);
-    }
+  void drawTongue(float headSize) {
+    // Gambar lidah
+    fill(255, 1, 1); // Warna merah untuk lidah
+    float tongueLength = headSize * 0.5;
+    float tongueWidth = headSize * 0.3;
+    float tongueX = pos.x + headSize * 0.5;
+    float tongueY = pos.y + headSize * 0.8;
+    float angle = atan2(vel.y, vel.x);
+    float tongueEndX = tongueX + cos(angle) * tongueLength;
+    float tongueEndY = tongueY + sin(angle) * tongueLength;
+    triangle(tongueX, tongueY, tongueEndX - tongueWidth / 2, tongueEndY, tongueEndX + tongueWidth / 2, tongueEndY);
   }
 }
 
