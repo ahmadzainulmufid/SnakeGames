@@ -1,5 +1,5 @@
 <div align="center">
-  <h1># SnakeGameS</h1>
+  <h1>SnakeGameS</h1>
   <img src="https://github.com/ahmadzainulmufid/SnakeGames/assets/116527439/5efd922b-dbea-48df-9e0b-e91a9b01c525" alt="Animation">
 </div>
 
