@@ -3,6 +3,14 @@
   <img src="https://github.com/ahmadzainulmufid/SnakeGames/assets/116527439/5efd922b-dbea-48df-9e0b-e91a9b01c525" alt="Animation">
 </div>
 
+# Anggota
+Dalam pembuatan permainan ular ini, terlibat 5 orang anggota, antara lain:
+1. 2207412028  Laila Syalwa Salsabila
+2. 2207412030  Muhammad Yusul Ilham AbdulHadi
+3. 2207412038  Rico Mesias Tamba
+4. 2207412044  Zahra Annisa Fakhira
+5. 2207412045  Ahmad Zainul Mufid
+
 ## Deskripsi
 Snake Game adalah permainan klasik di mana pemain mengontrol seekor ular untuk memakan buah-buahan dan menghindari bom-bom. Jika mengenai bomnya akan terjadi pengurangan skor dan live akan berkurang. Game ini dibangun menggunakan bahasa pemrograman java dengan aplikasi Processing dan memanfaatkan beberapa pustaka, termasuk Minim untuk pemrosesan audio.
 
