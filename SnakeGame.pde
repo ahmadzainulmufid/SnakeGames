@@ -14,7 +14,7 @@ Snake snake;
 PVector bomb;
 
 float angle = 0.0;
-float angleSpeed = 0.05;
+float angleSpeed = 0.02;
 float foodSizeAmplitude = 15; // Adjust the amplitude to control the size change
 float bombSizeAmplitude = 15;
 
@@ -27,13 +27,10 @@ float bombScale = 12;
 Minim minim;
 AudioPlayer gameSound;
 AudioPlayer gameOverSound;
-
-Minim minim;
-AudioPlayer gameSound;
-AudioPlayer gameOverSound;
+AudioPlayer foodSound;
 
 void setup() {
-  size(500, 500);
+  size(800, 800);
 
   // Load background image
   backgroundImage = loadImage("background.jpg");
@@ -52,7 +49,7 @@ void setup() {
   bomb = new PVector();
   newFood();
   newBomb();
-  //frameRate(8);
+  //frameRate(100);
   
     minim = new Minim(this);
 
@@ -61,12 +58,13 @@ void setup() {
 
   // Load game over sound
   gameOverSound = minim.loadFile("videogame-death-sound-43894.mp3");
+  // Load food sound
+  foodSound = minim.loadFile("570636__bsp7176__food.mp3");
 }
 
 void draw() {
-  // Display background image
   image(backgroundImage, 0, 0);
-
+  drawBorder();
   if (!dead) {
     if (frameCount % speed == 0) {
       snake.update();
@@ -74,20 +72,23 @@ void draw() {
     snake.show();
     snake.eat();
 
-    // Add animation to the food (fruit)
     angle += angleSpeed;
-    float foodSize = grid + foodSizeAmplitude * sin(angle); // Change the size of the food
-    image(fruitImage, food.x, food.y, foodSize, foodSize); // Display the fruit image
+    float foodSize = grid + (foodSizeAmplitude * sin(angle))/5;
+    image(fruitImage, food.x, food.y, foodSize * 1.5, foodSize * 1.5); // Perbesar buah
 
-    // Add animation to the food (fruit)
     angle += angleSpeed;
-    float bombSize = grid + bombSizeAmplitude * sin(angle); // Change the size of the food
-    image(bombImage, bomb.x, bomb.y, bombSize, bombSize); // Display the fruit image
-    
+    float bombSize = grid + (bombSizeAmplitude * sin(angle))/5;
+    image(bombImage, bomb.x, bomb.y, bombSize * 1.5, bombSize * 1.5); // Perbesar bom
+
     textAlign(LEFT);
     fill(255);
     textSize(25);
     text("Score: " + snake.len, 14, 32);
+    
+    textAlign(LEFT);
+    fill(255);
+    textSize(25);
+    text("Lives: " + snake.lives, 14, height - 10);
   } else {
     textSize(25);
     textAlign(CENTER, CENTER);
@@ -96,16 +97,41 @@ void draw() {
   }
 }
 
+
+
+void drawBorder() {
+  // Set brick size and color
+  int brickSize = 20;
+  int brickColor = color(106,49,13); // White color
+
+  // Draw horizontal bricks at the top and bottom
+  for (int x = 0; x < width; x += brickSize) {
+    fill(brickColor);
+    rect(x, 0, brickSize, brickSize);
+    rect(x, height - brickSize, brickSize, brickSize);
+  }
+
+  // Draw vertical bricks on the left and right sides
+  for (int y = 0; y < height; y += brickSize) {
+    fill(brickColor);
+    rect(0, y, brickSize, brickSize);
+    rect(width - brickSize, y, brickSize, brickSize);
+  }
+}
+
+
 void newFood() {
-  food.x = floor(random(width));
-  food.y = floor(random(height));
-  food.x = floor(food.x/grid) * grid;
-  food.y = floor(food.y/grid) * grid;
+  int borderSize = 20;
+  food.x = floor(random(borderSize, width - borderSize));
+  food.y = floor(random(borderSize, height - borderSize));
+  food.x = floor(food.x / grid) * grid;
+  food.y = floor(food.y / grid) * grid;
 }
 
 void newBomb() {
-  bomb.x = floor(random(width));
-  bomb.y = floor(random(height));
+  int borderSize = 20;
+  bomb.x = floor(random(borderSize, width - borderSize));
+  bomb.y = floor(random(borderSize, height - borderSize));
   bomb.x = floor(bomb.x/grid) * grid;
   bomb.y = floor(bomb.y/grid) * grid;
 }
