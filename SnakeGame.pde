@@ -30,7 +30,7 @@ AudioPlayer gameOverSound;
 AudioPlayer foodSound;
 
 void setup() {
-  size(500, 500);
+  size(800, 800);
 
   // Load background image
   backgroundImage = loadImage("background.jpg");
@@ -63,7 +63,6 @@ void setup() {
 }
 
 void draw() {
-  // Display background image
   image(backgroundImage, 0, 0);
   drawBorder();
   if (!dead) {
@@ -73,24 +72,23 @@ void draw() {
     snake.show();
     snake.eat();
 
-    // Add animation to the food (fruit)
     angle += angleSpeed;
-    float foodSize = grid + (foodSizeAmplitude * sin(angle))/5; // Change the size of the food
-    image(fruitImage, food.x, food.y, foodSize, foodSize); // Display the fruit image
+    float foodSize = grid + (foodSizeAmplitude * sin(angle))/5;
+    image(fruitImage, food.x, food.y, foodSize * 1.5, foodSize * 1.5); // Perbesar buah
 
-    // Add animation to the food (fruit)
     angle += angleSpeed;
-    float bombSize = grid + (bombSizeAmplitude * sin(angle))/5; // Change the size of the food
-    image(bombImage, bomb.x, bomb.y, bombSize, bombSize); // Display the fruit image
-    
+    float bombSize = grid + (bombSizeAmplitude * sin(angle))/5;
+    image(bombImage, bomb.x, bomb.y, bombSize * 1.5, bombSize * 1.5); // Perbesar bom
+
     textAlign(LEFT);
     fill(255);
     textSize(25);
     text("Score: " + snake.len, 14, 32);
+    
     textAlign(LEFT);
     fill(255);
     textSize(25);
-    text("Lives: " + snake.lives, 14, 480);
+    text("Lives: " + snake.lives, 14, height - 10);
   } else {
     textSize(25);
     textAlign(CENTER, CENTER);
@@ -99,10 +97,12 @@ void draw() {
   }
 }
 
+
+
 void drawBorder() {
   // Set brick size and color
   int brickSize = 20;
-  int brickColor = color(255, 0, 0); // Red color
+  int brickColor = color(106,49,13); // White color
 
   // Draw horizontal bricks at the top and bottom
   for (int x = 0; x < width; x += brickSize) {
@@ -118,6 +118,7 @@ void drawBorder() {
     rect(width - brickSize, y, brickSize, brickSize);
   }
 }
+
 
 void newFood() {
   int borderSize = 20;
